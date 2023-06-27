@@ -1,5 +1,6 @@
 import pygame
 import os,sys,time,random
+import const
 from random import randint,uniform
 
 
@@ -7,6 +8,11 @@ from random import randint,uniform
 '''
 Criando os Meteoros Aula 07 Colisão simples
 '''
+
+
+
+
+
 width, height = 1200, 650
 
 #Calcula o tempo de disparo
@@ -174,10 +180,60 @@ while loop:
     #Criando colisão campo
     for meteoro_tupla in metoros_list:
         rec_meteoro = meteoro_tupla[0]
-       
+
+
+
            
 
 
     pygame.display.update()
+
+class Game:
+    def __init__(self):
+        pygame.init()
+        pygame.mixer.init()
+        self.tela = pygame.display.set_mode((const.LARGURA, const.ALTURA))
+        pygame.display.set_caption(const.TITULO)
+        self.esta_rodando = True
+        self.fonte =pygame.font.match_font(const.FONTE)
+        self.car_arq()
+
+    def car_arq(self):
+        dir_imgs = os.path.join(os.getcwd(), 'imagens')
+        self.tela = os.path.join(dir_imgs, 'tela.jpg')
+        self.logo = os.path.join(dir_imgs, 'faixa1.png')
+        self.logo = pygame.image.load(self.logo).convert()
+
+    def most_text(self, texto, tam, cor, x, y):
+        fonte = pygame.font.Font(self.fonte, tam)
+        texto = fonte.render(texto, True, cor)
+        texto_rect = texto.get_rect()
+        texto_rect.midtop = (x,y)
+        self.tela.blit(texto, texto_rect)
+
+    def tel_star(self):
+        self.most_texto('-Pressione qualquer tecla', 32, const.COR, const.LARGURA / 2, 320)
+        pygame.display.flip()
+        #esp_jog = esperar por jogador
+        self.esp_jog()
+
+    def esp_jog(self):
+        esperando = True
+        while esperando:
+            self.relogio.tick(const.FPS)
+            for event in pygame.event.get():
+                if event.type ==pygame.QUIT:
+                    esperando = False
+                    self.esta_rodando = False
+                if event.type == pygame.KEYUP:
+                    esperando = False
+
+g = Game()
+g.tel_star()
+
+while g.esta_rodando:
+    g.novo_jogo()
     
+
+
 pygame.quit()
